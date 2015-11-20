@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Hubub - Sound | Location</title>
+
+	<!-- JS -->
+	<script src="js/recorderjs/recorder.js"></script>
+	<script src="js/location.js"></script>
+	<script src="js/audiorecorder.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="main.css">
+</head>
+<body>
+	<div class="main-column">
+		<img src="assets/logo-white.png" alt="Hubub" id="logo"/>
+		<div class="play-rec">
+			<a href="#" onclick="beginAudioRecording()"><img src="assets/record-btn.png" alt="Record Button" class="interact-button"/></a>
+		</div>
+		<div class="white-box">
+		<h1>Listen close...</h2>
+			<p><a href="#" id="save">Download your sound</a></p>
+			<p>Link an idea to a place. Create meaningful immersive experiences triggered by echoes. Disturb an idea through sound.</p>
+			<p>Hubub let's you record a sound and leave it at a location for someone else to discover.</p>
+			<p>Connect with strangers whilst exploring your surroundings. See what they saw, feel what they felt, listen to their stories.</p>
+		</div>
+		<img src="assets/slider-1.png" alt="Sound PLUS Location" class="slider"/>
+		<div class="white-text">
+			<p id="location_txt">Updating location...</p>
+			<div id="sounds_txt"><p>Searching for nearby sounds...</p></div>
+			<h2>Plan of Action</h2>
+			<h3>Web</h3>
+			<ol>
+				<li><del>Center text and graphic on button</del></li>
+				<li><del>Develop a way to record a sound in JavaScript when the user clicks / taps the button</del></li>
+				<li><del>Upload the users sound to the backend</del></li>
+				<li>Refactor JavaScript code</li>
+				<li>Integrate the sounds with the coordinates in the backend</li>
+				<li>Show a list of sounds located near you</li>
+				<li>Build API documentation</li>
+			</ol>
+			<p>This project was dreamed up by Andrew Sargeant (based in Plymouth, UK). If you would like more information about this project, please get in touch andrewsargeant [at] gmail [dot] com.</p>
+			<h2>Privacy &amp; Terms</h2>
+			<p>Hubub tries it's best to limit how much personal data it stores. In return, I ask you kindly not to abuse this system.<q>Technology is destructive only in the hands of people who do not realize that they are one and the same process as the universe.</q><cite>Alan Watts</cite></p>
+
+			<p>Please note: Hubub does not have a valid security certificate installed and therefore does not use an encrypted method to transfer your location to it's servers. Hubub is in its fledgeling stage and will become more secure and robust as it evolves. If you are worried about this then do not allow Hubub to access your location (I won't take offense).</p>
+		</div>
+	</div>
+<script>
+
+//EVENTS
+window.addEventListener("load", onLoadHandler);
+
+//VARIABLES
+var mediaRecorder;
+
+//Get the users location (if they let us)
+initLocation(showPosition, errorFindingPosition);
+
+function onLoadHandler()
+{
+	initAudioRecorder();
+}
+
+//Geolocation callback when we find the users position
+function showPosition(position) 
+{
+    location_txt.innerHTML = "Latitude: " + position.coords.latitude + 
+    "<br>Longitude: " + position.coords.longitude; 
+
+    //Get the Hubub sounds close by
+    loadSounds(position.coords.latitude, position.coords.longitude);
+}
+
+//Geolocation callback when there is an error finding the users position
+function errorFindingPosition(error)
+{
+	 location_txt.innerHTML = error;
+}
+
+//Load possible sounds the person can listen to
+function loadSounds(found_lat, found_long) 
+{
+
+	console.log("loading sounds...")
+
+	//Create a new xhttp request
+	var xhttp = new XMLHttpRequest();
+
+  	xhttp.onreadystatechange = function() 
+  	{
+  		if (xhttp.readyState == 4 && xhttp.status == 200) {
+  			var json = xhttp.responseText;
+  			console.log(json);
+  			var geo_array = JSON.parse(json);
+  			//console.log(geo_array);
+
+  			var sound_list_txt = "";
+  			for(var i = 0; i < geo_array.length; i++)
+  			{
+  				sound_list_txt = sound_list_txt + "<p>Sound found at position: " + geo_array[i]['latitude'] + ", " + geo_array[i]['longitude'] + "left at: " + geo_array[i]['time'] + "</p>";
+  				
+  			}
+  			document.getElementById("sounds_txt").innerHTML = sound_list_txt;// xhttp.responseText;
+    	}
+	}
+
+  	xhttp.open("POST", "get_local_sounds.php", true);
+  	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+  	var formData = "latitude=".concat(found_lat,"&longitude=",found_long);
+  	console.log("Sending form data: "+formData);
+  	xhttp.send(formData);
+}
+
+soundUploadComplete = function(answer)
+{
+	//Upload the coordinates of this sound too
+}
+
+</script>
+
+</html>

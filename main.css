@@ -1,0 +1,76 @@
+@font-face {
+  font-family: 'Futura';
+  src: url('assets/fonts/webfonts/FuturaLT.eot'); /* IE9 Compat Modes */
+  src: url('assets/fonts/webfonts/FuturaLT.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('assets/fonts/webfonts/FuturaLT.woff2') format('woff2'), /* Super Modern Browsers */
+       url('assets/fonts/webfonts/FuturaLT.woff') format('woff'), /* Pretty Modern Browsers */
+       url('assets/fonts/webfonts/FuturaLT.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('assets/fonts/webfonts/FuturaLT.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body{
+	background-color: black;
+}
+
+h1, h2, h3, p, ol li{
+	color: white;
+}
+
+h1, h2, h3{
+	font-family: 'Futura', sans-serif;
+}
+
+p, ol li{
+	font-family: verdana, arial, sans-serif;
+}
+
+img.slider, img#logo{
+	width:100%;
+	max-width:1024px;
+}
+
+img#logo{
+	margin-top: 60px;
+	margin-bottom: 30px;
+}
+
+div.play-rec{
+	margin: 10px auto 110px;
+}
+
+img.interact-button{
+	width: 100%;
+	max-width: 381px;
+	display: block;
+	margin: 0 auto;
+}
+
+div.white-box{
+	background-color: white;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 10px;
+	padding-bottom:15px;
+}
+
+div.white-text{
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 10px;
+	padding-bottom:15px;
+}
+
+div.main-column{
+	width:100%;
+	max-width: 1024px;
+	margin:0 auto;
+}
+
+div.white-box h1, div.white-box h2, div.white-box p{
+	color:black;
+}
+

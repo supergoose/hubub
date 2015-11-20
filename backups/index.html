@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Cacophony - Sound | Location</title>
+</head>
+<body>
+	<h1>Cacophony</h1>
+	<h2>Submit</h2>
+	<p>Submit a sound:</p>
+	<form action="file_upload_sound.php" method="post" enctype="multipart/form-data">
+		<p>Select a sound file to upload (accepts: .wav or .mp3):</p>
+		<ul>
+			<li><input type="file" name="fileToUpload" id="fileToUpload"/></li>
+			<li><input type="text" name="username" id="username" value="Username (optional)"/></li>
+			<li><input type="submit" value="Upload" name="submit"/></li>
+		</ul>
+	</form>
+	<p>Not sure what to submit? How about a relevant lyric, a passing thought, something you've just seen or a dirty word. Immerse a stranger in your reality.</p>
+	<h2>Listen</h2>
+	<p id="location_txt">Updating location...</p>
+	<p id="sounds_txt">Searching for nearby sounds...</p>
+	<h2>What's all the hubub?</h2>
+	<p>Connect an idea to a place. Create meaningful immersive experiences triggered by echoes. Disturb an idea through sound. Cacophony simply pinpoints a recorded sound to a location. Others can only hear the sound when they are in the same place, surrounded by the same environment as the sound author (weather permitting). Time will add it's own strange and delightful meanings to Cacophony; which is part of the beauty of the project.</p>
+	<p>This project was dreamed up by Andrew Sargeant (based in Plymouth, UK). If you would like more information about this project, please get in touch andrewsargeant [at] gmail [dot] com.</p>
+	<h2>Privacy &amp; Terms</h2>
+	<p>Cacophony tries it's best to limit how much personal data it stores. In return, I ask you kindly not to abuse this system.<q>Technology is destructive only in the hands of people who do not realize that they are one and the same process as the universe.</q><cite>Alan Watts</cite></p>
+
+	<p>Please note: Cacophony does not have a valid security certificate installed and therefore does not use an encrypted method to transfer your location to it's servers. Cacophony is in its fledgeling stage and will become more secure and robust as it evolves. If you are worried about this then do not allow Cacophony to access your location (I won't take offense).</p>
+
+<script>
+
+//identifier for the location paragraph text
+var location_txt = document.getElementById("location_txt");
+
+//Get the users location (if they let us)
+getLocation();
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+        loadSounds();
+    } else {
+        location_txt.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+
+function showPosition(position) 
+{
+    location_txt.innerHTML = "Latitude: " + position.coords.latitude + 
+    "<br>Longitude: " + position.coords.longitude; 
+    loadSounds(position.coords.latitude, position.coords.longitude);
+}
+
+//Load possible sounds the person can listen to
+function loadSounds(found_lat, found_long) {
+	console.log("loading sounds...")
+	//Create a new xhttp request
+	var xhttp = new XMLHttpRequest();
+
+  	xhttp.onreadystatechange = function() 
+  	{
+  		if (xhttp.readyState == 4 && xhttp.status == 200) {
+      		document.getElementById("sounds_txt").innerHTML = xhttp.responseText;
+    	}
+	}
+
+  	xhttp.open("POST", "get_local_sounds.php", true);
+  	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  	var formData = "latitude=".concat(found_lat,"&longitude=",found_long);
+  	console.log("Sending form data: "+formData);
+  	xhttp.send(formData);
+}
+
+</script>
+
+</html>
